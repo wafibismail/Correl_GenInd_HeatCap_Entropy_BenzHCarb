@@ -16,5 +16,5 @@
   <tr><th colspan=6>Good alpha intervals</th></tr>
   <tr><td><img src="imgs/02_good_a_intervals_DH_R_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SO_a.png"></td><td><img src="imgs/02_good_a_intervals_E_R_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SO_a.png"></td></tr>
   <tr><th colspan=6>Scatter plots</th></tr>
-  <tr><td><img src="imgs/03_scatter_DH_R_a.png"></td><td><img src="imgs/03_scatter_DH_SCI_a.png"></td><td><img src="imgs/03_scatter_DH_SO_a.png"></td><td><img src="imgs/03_scatter_E_R_a.png"></td><td><img src="imgs/03_scatter_E_SCI_a.png"></td><td><img src="imgs/03_scatter_E_SO_a.png"></td></tr>
+  <tr><td><img src="imgs/03_scatter_DH_R.png"></td><td><img src="imgs/03_scatter_DH_SCI.png"></td><td><img src="imgs/03_scatter_DH_SO.png"></td><td><img src="imgs/03_scatter_E_R.png"></td><td><img src="imgs/03_scatter_E_SCI.png"></td><td><img src="imgs/03_scatter_E_SO.png"></td></tr>
 </table>
