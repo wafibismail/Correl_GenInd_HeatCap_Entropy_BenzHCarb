@@ -8,3 +8,13 @@
 </table>
 <h3>Syntax</h3>
 <p>The above scripts are to be run in Octave. Due to some syntax differences e.g. in subsetting matrices/arrays, they will not run immediately (without ammendments) in Matlab.</p>
+<h3>Output</h3>
+<table>
+  <tr><th colspan=6>Combined correlation curves</th></tr>
+  <tr><td colspan=3><img src="imgs/01_comb_ccurves_DH_indices_FAR.png"></td><td colspan=3><img src="imgs/01_comb_ccurves_E_indices_FAR.png"></td></tr>
+  <tr><td colspan=3><img src="imgs/01_comb_ccurves_DH_indices_NEAR.png"></td><td colspan=3><img src="imgs/01_comb_ccurves_E_indices_NEAR.png"></td></tr>
+  <tr><th colspan=6>Good alpha intervals</th></tr>
+  <tr><td><img src="imgs/02_good_a_intervals_DH_R_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SO_a.png"></td><td><img src="imgs/02_good_a_intervals_E_R_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SO_a.png"></td></tr>
+  <tr><th colspan=6>Scatter plots</th></tr>
+  <tr><td><img src="imgs/03_scatter_DH_R_a.png"></td><td><img src="imgs/03_scatter_DH_SCI_a.png"></td><td><img src="imgs/03_scatter_DH_SO_a.png"></td><td><img src="imgs/03_scatter_E_R_a.png"></td><td><img src="imgs/03_scatter_E_SCI_a.png"></td><td><img src="imgs/03_scatter_E_SO_a.png"></td></tr>
+</table>
