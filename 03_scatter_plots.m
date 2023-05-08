@@ -11,8 +11,8 @@ close all; % Before drawing, close any figures already opened
 clear;     % Clear all variables
 
 % CONFIG: Line width and font fize for each curve in drawn figures
-lineWidth = 1;
-fontSize = 13;
+lineWidth = 2;
+fontSize = 26;
 % Save plots to images? Set to true if yes
 saveToFile = false;
 

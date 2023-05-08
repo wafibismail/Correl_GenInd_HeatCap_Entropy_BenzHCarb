@@ -11,8 +11,8 @@ clear;     % and clear all variables
 format long; % More significant figures printed in the console
 
 % Config: Adjust lines' width, font size, whether or not to save to file
-lineWidth = 2;
-fontSize = 13;
+lineWidth = 3;
+fontSize = 26;
 saveToFile = false;
 
 % Cell containing Entropy and Heat Capacity of lower benzenoid
