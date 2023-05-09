@@ -14,7 +14,9 @@
   <tr><td colspan=3><img src="imgs/01_comb_ccurves_DH_indices_FAR.png"></td><td colspan=3><img src="imgs/01_comb_ccurves_E_indices_FAR.png"></td></tr>
   <tr><td colspan=3><img src="imgs/01_comb_ccurves_DH_indices_NEAR.png"></td><td colspan=3><img src="imgs/01_comb_ccurves_E_indices_NEAR.png"></td></tr>
   <tr><th colspan=6>Good alpha intervals</th></tr>
-  <tr><td><img src="imgs/02_good_a_intervals_DH_R_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_DH_SO_a.png"></td><td><img src="imgs/02_good_a_intervals_E_R_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SCI_a.png"></td><td><img src="imgs/02_good_a_intervals_E_SO_a.png"></td></tr>
+  <tr><td colspan=2><img src="imgs/02_good_a_intervals_DH_R_a.png"></td><td colspan=2><img src="imgs/02_good_a_intervals_DH_SCI_a.png"></td><td colspan=2><img src="imgs/02_good_a_intervals_DH_SO_a.png"></td></tr>
+  <tr><td colspan=2><img src="imgs/02_good_a_intervals_E_R_a.png"></td><td colspan=2><img src="imgs/02_good_a_intervals_E_SCI_a.png"></td><td colspan=2><img src="imgs/02_good_a_intervals_E_SO_a.png"></td></tr>
   <tr><th colspan=6>Scatter plots</th></tr>
-  <tr><td><img src="imgs/03_scatter_DH_R.png"></td><td><img src="imgs/03_scatter_DH_SCI.png"></td><td><img src="imgs/03_scatter_DH_SO.png"></td><td><img src="imgs/03_scatter_E_R.png"></td><td><img src="imgs/03_scatter_E_SCI.png"></td><td><img src="imgs/03_scatter_E_SO.png"></td></tr>
+  <tr><td colspan=2><img src="imgs/03_scatter_DH_R.png"></td><td colspan=2><img src="imgs/03_scatter_DH_SCI.png"></td><td colspan=2><img src="imgs/03_scatter_DH_SO.png"></td></tr>
+  <tr><td colspan=2><img src="imgs/03_scatter_E_R.png"></td><td colspan=2><img src="imgs/03_scatter_E_SCI.png"></td><td colspan=2><img src="imgs/03_scatter_E_SO.png"></td></tr>
 </table>
