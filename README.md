@@ -4,11 +4,34 @@
   <tr><td><a href=01_combined_corr_curves.m>01_combined_corr_curves.m</a></td><td>Generates 4 combined plots for the correlation curves for the 6 pairs of data</td></tr>
   <tr><td><a href=02_good_alpha_intervals.m>02_good_alpha_intervals.m</a></td><td>Generates 6 correlation curves, i.e., one for each pair of data, also indicating the alpha intervals which results in good correlation</td></tr>
   <tr><td><a href=03_scatter_plots.m>03_scatter_plots.m</a></td><td>Generates 6 scatter plots, one for each pair of data</td></tr>
-  <tr><td><a href=GoldenSectionSearch_Maximum.m>GoldenSectionSearch_Maximum.m</a></td><td><b>IMPORTANT: This must be placed in the working directory as it is referenced in the 1<sup>st</sup> and 3<sup>rd</sup> scripts.</b> This is the Octave 7.2 implementation of the <a href="https://en.wikipedia.org/wiki/Golden-section_search">Golden Section Search</a> algorithm. I manually translated this from the <a href="https://en.wikipedia.org/wiki/Golden-section_search">Python code</a>.</td></tr>
+  <tr><td><a href=GoldenSectionSearch_Maximum.m>GoldenSectionSearch_Maximum.m</a></td><td><b>IMPORTANT: This must be placed in the working directory as it is referenced in the <a href=01_combined_corr_curves.m>1<sup>st</sup></a> and <a href=03_scatter_plots.m>3<sup>rd</sup></a> scripts.</b> This is the Octave 7.2 implementation of the <a href="https://en.wikipedia.org/wiki/Golden-section_search">Golden Section Search</a> algorithm. I manually translated this from the <a href="https://en.wikipedia.org/wiki/Golden-section_search">Python code</a>.</td></tr>
 </table>
 <h3>Syntax</h3>
 <p>The above scripts are to be run in Octave. Due to some syntax differences between Matlab and Octave, e.g. in subsetting matrices/arrays, the scripts will not run (without ammendments) in Matlab.</p>
 <h3>Expected Output</h3>
+<h4 align=center>Command Window output (<a href=01_combined_corr_curves.m>1<sup>st</sup> script</a>)</h4>
+
+```
+E against general_R
+peakAlpha = -1.948205235815929
+peakCorrCoeff = 0.989278272323736
+E against general_SCI
+peakAlpha = -3.662418922308818
+peakCorrCoeff = 0.985744623747090
+E against general_SO
+peakAlpha = -1.728514071867182
+peakCorrCoeff = 0.982031572039760
+ΔH against general_R
+peakAlpha = -1.238343021990512
+peakCorrCoeff = 0.998062916158750
+ΔH against general_SCI
+peakAlpha = -2.355414572508679
+peakCorrCoeff = 0.996731969127876
+ΔH against general_SO
+peakAlpha = -1.116549089101582
+peakCorrCoeff = 0.995250875686022
+```
+
 <table>
   <tr><th colspan=6>Combined correlation curves</th></tr>
   <tr><td colspan=3><img src="imgs/01_comb_ccurves_DH_indices_FAR.png"></td><td colspan=3><img src="imgs/01_comb_ccurves_E_indices_FAR.png"></td></tr>
