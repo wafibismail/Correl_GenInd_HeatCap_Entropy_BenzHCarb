@@ -169,7 +169,7 @@ for ii = 1:numData
 end
 
 for ii = 1:4
-  % Replace hyphen-minuses with hyphens
+  % Replace hyphen with minuses
   figure(ii);
   xticklabels(strrep(xticklabels,'-','−'));
   yticklabels(strrep(yticklabels,'-','−'));
