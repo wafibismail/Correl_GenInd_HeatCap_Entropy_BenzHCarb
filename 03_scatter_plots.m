@@ -5,7 +5,7 @@
 %  - ΔH and R_{-1.2383}
 %  - ΔH and SCI_{-2.3554}
 %  - ΔH and SO_{-1.1165}
-% In addition, the curves of ρ against α and scatter plots of best indices are plotted
+% ... with their respective regression lines.
 
 close all; % Before drawing, close any figures already opened
 clear;     % Clear all variables
@@ -15,6 +15,10 @@ lineWidth = 2;
 fontSize = 26;
 % Save plots to images? Set to true if yes
 saveToFile = false;
+% Note: Dimensions of resulting images are scaled according to each window size.
+%       To control the dimensions, after running the whole script, resize each
+%       ... figure window and then run only the saveas functions
+%       ... manually, by selection
 
 % Cell containing Entropy and Heat Capacity of lower benzenoid
 expData = {reshape([
@@ -29,7 +33,7 @@ expData = {reshape([
    251.973 336.098 267.543 337.204 285.041 368.518
   ]', 30, 1);
   "E", "ΔH" % Their labels
-}
+};
 
 % 30 by 3 array, number of edges in each dudv partition: (2,2), (2,3) then (3,3)
 d_f = [

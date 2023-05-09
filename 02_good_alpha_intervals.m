@@ -1,10 +1,10 @@
-% In this script, six plots are generated which shows alpha intervals for good
-%  - correlation coefficient ρ between E and R_a
-%  - correlation coefficient ρ between E and SCI_a
-%  - correlation coefficient ρ between E and SO_a
-%  - correlation coefficient ρ between ΔH and R_a
-%  - correlation coefficient ρ between ΔH and SCI_a
-%  - correlation coefficient ρ between ΔH and SO_a
+% In this script, six plots are generated which shows α intervals for good
+%  - correlation coefficient ρ between E and R_α
+%  - correlation coefficient ρ between E and SCI_α
+%  - correlation coefficient ρ between E and SO_α
+%  - correlation coefficient ρ between ΔH and R_α
+%  - correlation coefficient ρ between ΔH and SCI_α
+%  - correlation coefficient ρ between ΔH and SO_α
 
 close all; % Close any figures already opened
 clear;     % and clear all variables
@@ -14,6 +14,10 @@ format long; % More significant figures printed in the console
 lineWidth = 3;
 fontSize = 26;
 saveToFile = false;
+% Note: Dimensions of resulting images are scaled according to each window size.
+%       To control the dimensions, after running the whole script, resize each
+%       ... figure window and then run only the saveas functions
+%       ... manually, by selection
 
 % Cell containing Entropy and Heat Capacity of lower benzenoid
 expData = {reshape([ % Entropy
@@ -51,7 +55,7 @@ numData = size(expData, 2);       % two
 numIndices = size(getIndexFns,2); % three
 numCurves = numData*numIndices;   % six
 
-% Boundaries for visible intervals
+% Boundaries for visible intervals, for each index-property pair
 %             R_a   SCI_a   SO_a
 xstart = [   -3.2    -5.5   -2.2   % E
              -2.4    -4.4   -1.9]; % ΔH

@@ -1,10 +1,10 @@
 % In this script, six values are closely approximated via golden section search
-%  - correlation coefficient ρ between E and R_a with the best alpha value
-%  - correlation coefficient ρ between E and SCI_a with the best alpha value
-%  - correlation coefficient ρ between E and SO_a with the best alpha value
-%  - correlation coefficient ρ between ΔH and R_a with the best alpha value
-%  - correlation coefficient ρ between ΔH and SCI_a with the best alpha value
-%  - correlation coefficient ρ between ΔH and SO_a with the best alpha value
+%  - α value for which correlation coefficient ρ is strongest between E and R_a
+%  - α value for which ρ is strongest between E and SCI_α
+%  - α value for which ρ is strongest between E and SO_α
+%  - α value for which ρ is strongest between ΔH and R_α
+%  - α value for which ρ is strongest between ΔH and SCI_α
+%  - α value for which ρ is strongest between ΔH and SO_α
 % In addition, these curves are plotted
 
 close all; % Close any figures already opened
@@ -15,6 +15,10 @@ format long; % More significant figures printed in the console
 lineWidth = 2;
 fontSize = 18;
 saveToFile = false;
+% Note: Dimensions of resulting images are scaled according to each window size.
+%       To control the dimensions, after running the whole script, resize each
+%       ... figure window and then run only the saveas functions
+%       ... manually, by selection
 
 % Cell containing Entropy and Heat Capacity of lower benzenoid
 expData = {reshape([ % Entropy
@@ -137,10 +141,12 @@ for ii = 1:numData
   end
 
   % Continue drawing indicator for interval for which R_a is best (text)
-  plot([xmeet1 xmeet2], [ymeet1 ymeet2], '*b', 'MarkerSize', 16, 'LineWidth', lineWidth/1.5); % Mark them with an asterisk
-  meet1Text = text(xmeet1, ymeet1, {'', sprintf(" (−%.04f, %.04f)", abs(xmeet1), ymeet1)}, 'VerticalAlignment', 'top');
-  text(xmeet2, ymeet2, {'', sprintf("(0, %.04f) ", ymeet2)}, 'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'Color', [0, 0, 0.8]);
-  set(meet1Text, 'Color', [0, 0, 0.8]); % Set to blue color, same as lines
+  plot([xmeet1 xmeet2], [ymeet1 ymeet2], '*b',
+       'MarkerSize', 16, 'LineWidth', lineWidth/1.5); % Mark with blue asterisks
+  text(xmeet1, ymeet1, {'', sprintf(" (−%.04f, %.04f)", abs(xmeet1), ymeet1)},
+       'VerticalAlignment', 'top', 'Color', [0, 0, 0.8]);
+  text(xmeet2, ymeet2, {'', sprintf("(0, %.04f) ", ymeet2)},
+       'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'Color', [0, 0, 0.8]);
 
   % Label this expData's zoomed-in plot
   xlabel('α');
@@ -167,9 +173,7 @@ for ii = 1:4
   figure(ii);
   xticklabels(strrep(xticklabels,'-','−'));
   yticklabels(strrep(yticklabels,'-','−'));
-end
 
-for ii = 1:4
   % Set all fontsizes to size specified early in the script
   set(findall(figure(ii),'-property','FontSize'),'FontSize', fontSize)
 end
