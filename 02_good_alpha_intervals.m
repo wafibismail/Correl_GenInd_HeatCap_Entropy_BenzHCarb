@@ -12,18 +12,25 @@ format long; % More significant figures printed in the console
 
 % Config: Adjust lines' width, font size, whether or not to save to file
 lineWidth = 3;
-fontSize = 26;
+fontSize = 24;
 saveToFile = false;
 % Note: Dimensions of resulting images are scaled according to each window size.
 %       To control the dimensions, after running the whole script, resize each
 %       ... figure window and then run only the saveas functions
 %       ... manually, by selection
 
+% Utility: Below is a function to round-off to 4 decimal places | returns string
+%          Need to use this function as round(X,4,Type) does not exist in Octave
+%          ... and sprintf("%.04f",X) does not round properly for some numbers.
+as_4_dp_str = @(x) sprintf('%.04f', round(x*(10^4))/(10^4));
+
 % Cell containing Entropy and Heat Capacity of lower benzenoid
 expData = {reshape([ % Entropy
-    269.72 334.15 389.48 395.88 444.72 447.44 457.96 455.84 450.42 399.49
-    499.83 513.86 508.54 507.39 506.08 512.52 500.73 510.31 509.21 513.88
-    511.77 509.61 461.55 463.74 468.71 555.41 472.30 554.78 468.80 551.71
+    269.722 334.155 389.475 395.882 444.724 447.437
+    457.958 455.839 450.418 399.491 499.831 513.857
+    508.537 507.395 506.076 512.523 500.734 510.307
+    509.210 513.879 511.770 509.611 461.545 463.738
+    468.712 555.409 472.295 554.784 468.796 551.708
   ]', 30, 1), reshape([ % Heat Capacity
     83.019 133.325 184.194 183.654 235.165 233.497
    234.568 234.638 233.558 200.815 286.182 285.056
@@ -66,12 +73,7 @@ ystart = [0.99301 0.98901  0.983;  % E
 yend = [     0.95    0.96  0.975;  % E
              0.97   0.975   0.98]; % ΔH
 
-% Boundaries for good alpha intervals
-%                    R_a            SCI_a              SO_a
-a_lb = [-2.5110455626637 -4.4900727614681 -1.96418016830175    % E
-        -1.8384125797782 -3.3914310005448 -1.55591746776294];  % ΔH
-a_ub = [-1.3332936534986 -2.7640513282069 -1.47956927233366    % E
-        -0.54993661705396 -1.1480473895238 -0.60370868891694]; % ΔH
+% Exast rho value considered good for E and ΔH
 a_goodrho = [0.98; 0.99];
 
 % Colors (different shades of cyan and green)
@@ -84,7 +86,7 @@ colCurve = {[0, 0.75, 0.75]; [0, 0.5, 0]};
 for ii = 1:numData
   % Draw correlation curves for each index-property pair
   for n = 1:numIndices
-    ccFn = @(alpha) corrcoef( % Get: Corrcoef between benzenoid prop and index
+    ccFn = @(alpha) corrcoef(
       getIndexFns{n}(alpha)(!isnan(expData{1,ii})),
       expData{1,ii}(!isnan(expData{1,ii}))
     )(1,2);
@@ -92,15 +94,24 @@ for ii = 1:numData
     this_fig = figure((ii-1)*numIndices+n);
     hold on;
 
+    % Get Interval limits
+    peakAlpha = mean(
+      GoldenSectionSearch_Maximum(ccFn, -4, 0, 1e-15));
+    getGoodAlphaInInterval = @(lb, ub) mean(
+      GoldenSectionSearch_Maximum(@(a)(-abs(ccFn(a)-a_goodrho(ii))), lb, ub, 1e-15));
+    a_lb = getGoodAlphaInInterval(peakAlpha-3, peakAlpha);
+    a_ub = getGoodAlphaInInterval(peakAlpha, peakAlpha+3);
+    disp(sprintf("ρ(%s,%s) >= %.02f when a = [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
+
     % Plot the actual curve, not including good alpha range
     % generate x values
-    x = [linspace(xstart(ii,n),a_lb(ii,n),300) linspace(a_ub(ii,n),xend(ii,n),300)];
+    x = [linspace(xstart(ii,n),a_lb,300) linspace(a_ub,xend(ii,n),300)];
     % generate their corresponding y values
     y = arrayfun(ccFn, x);
     plot(x, y, '-', 'LineWidth', lineWidth);
 
     % Shade the area between indicator lines
-    x1 = linspace(a_lb(ii,n),a_ub(ii,n),400);
+    x1 = linspace(a_lb,a_ub,400);
     a_goodrho_curve = arrayfun(ccFn, x1);
     iLine1 = zeros(1,size(x1,2)) + ystart(ii,n);
     iLine2 = zeros(1,size(x1,2)) + yend(ii,n);
@@ -109,14 +120,14 @@ for ii = 1:numData
     fill(x2, inBetween, colShaded{ii}, 'LineStyle', 'none');
 
     % Draw the indicator lines
-    plot([a_lb(ii,n) a_lb(ii,n)], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
-    plot([a_ub(ii,n) a_ub(ii,n)], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
-    plot([xstart(ii,n) a_lb(ii,n)], [a_goodrho(ii) a_goodrho(ii)], '--k', 'LineWidth', lineWidth/1.75);
-    plot([a_lb(ii,n) a_ub(ii,n)], [a_goodrho(ii) a_goodrho(ii)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorHorz{ii});
+    plot([a_lb a_lb], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
+    plot([a_ub a_ub], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
+    plot([xstart(ii,n) a_lb], [a_goodrho(ii) a_goodrho(ii)], '--k', 'LineWidth', lineWidth/1.75);
+    plot([a_lb a_ub], [a_goodrho(ii) a_goodrho(ii)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorHorz{ii});
 
     % Label the indicator lines
-    text(a_lb(ii,n), yend(ii,n), {'', sprintf("  α=−%.04f", abs(a_lb)(ii,n))}, 'VerticalAlignment', 'top', 'Rotation', 90);
-    text(a_ub(ii,n), yend(ii,n), {'', sprintf("  α=−%.04f", abs(a_ub)(ii,n))}, 'VerticalAlignment', 'top', 'Rotation', 90);
+    text(a_lb, yend(ii,n), {'', sprintf("  α=−%s", as_4_dp_str(abs(a_lb)))}, 'VerticalAlignment', 'top', 'Rotation', 90);
+    text(a_ub, yend(ii,n), {'', sprintf("  α=−%s", as_4_dp_str(abs(a_ub)))}, 'VerticalAlignment', 'top', 'Rotation', 90);
 
     % Plot the curve within the indicator lines with a different color
     plot(x1, a_goodrho_curve, '-', 'LineWidth', lineWidth, 'Color', colCurve{ii});

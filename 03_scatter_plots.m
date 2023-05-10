@@ -20,12 +20,19 @@ saveToFile = false;
 %       ... figure window and then run only the saveas functions
 %       ... manually, by selection
 
+% Utility: Below is a function to round-off to 4 decimal places | returns string
+%          Need to use this function as round(X,4,Type) does not exist in Octave
+%          ... and sprintf("%.04f",X) does not round properly for some numbers.
+as_4_dp_str = @(x) sprintf('%.04f', round(x*(10^4))/(10^4));
+
 % Cell containing Entropy and Heat Capacity of lower benzenoid
-expData = {reshape([
-    269.72 334.15 389.48 395.88 444.72 447.44 457.96 455.84 450.42 399.49
-    499.83 513.86 508.54 507.39 506.08 512.52 500.73 510.31 509.21 513.88
-    511.77 509.61 461.55 463.74 468.71 555.41 472.30 554.78 468.80 551.71
-  ]', 30, 1), reshape([
+expData = {reshape([ % Entropy
+    269.722 334.155 389.475 395.882 444.724 447.437
+    457.958 455.839 450.418 399.491 499.831 513.857
+    508.537 507.395 506.076 512.523 500.734 510.307
+    509.210 513.879 511.770 509.611 461.545 463.738
+    468.712 555.409 472.295 554.784 468.796 551.708
+  ]', 30, 1), reshape([ % Heat Capacity
     83.019 133.325 184.194 183.654 235.165 233.497
    234.568 234.638 233.558 200.815 286.182 285.056
    284.037 284.088 285.148 284.595 284.870 284.503
@@ -75,7 +82,7 @@ for edn = 1:numData
     this_figure = figure(3*(edn-1)+fnn); hold on;
     regLine = plot(x, y, '-', 'LineWidth', lineWidth);
     points = plot(getIndexFns{fnn}(peakAlpha), expData{1,edn}, '*', 'MarkerSize', 8, 'LineWidth', lineWidth/2);
-    bestIndexLabel = sprintf("%s_{−%.4f}", indexName{fnn}, abs(peakAlpha));
+    bestIndexLabel = sprintf("%s_{−%s}", indexName{fnn}, as_4_dp_str(abs(peakAlpha)));
     pointsLabel = sprintf("%s and %s", bestIndexLabel, expData{2,edn});
 
     % Label the scatter plot

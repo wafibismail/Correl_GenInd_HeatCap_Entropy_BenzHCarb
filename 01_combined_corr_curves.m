@@ -13,18 +13,25 @@ format long; % More significant figures printed in the console
 
 % Config: Adjust lines' width, font size, whether or not to save to file
 lineWidth = 2;
-fontSize = 18;
+fontSize = 16;
 saveToFile = false;
 % Note: Dimensions of resulting images are scaled according to each window size.
 %       To control the dimensions, after running the whole script, resize each
 %       ... figure window and then run only the saveas functions
 %       ... manually, by selection
 
+% Utility: Below is a function to round-off to 4 decimal places | returns string
+%          Need to use this function as round(X,4,Type) does not exist in Octave
+%          ... and sprintf("%.04f",X) does not round properly for some numbers.
+as_4_dp_str = @(x) sprintf('%.04f', round(x*(10^4))/(10^4));
+
 % Cell containing Entropy and Heat Capacity of lower benzenoid
 expData = {reshape([ % Entropy
-    269.72 334.15 389.48 395.88 444.72 447.44 457.96 455.84 450.42 399.49
-    499.83 513.86 508.54 507.39 506.08 512.52 500.73 510.31 509.21 513.88
-    511.77 509.61 461.55 463.74 468.71 555.41 472.30 554.78 468.80 551.71
+    269.722 334.155 389.475 395.882 444.724 447.437
+    457.958 455.839 450.418 399.491 499.831 513.857
+    508.537 507.395 506.076 512.523 500.734 510.307
+    509.210 513.879 511.770 509.611 461.545 463.738
+    468.712 555.409 472.295 554.784 468.796 551.708
   ]', 30, 1), reshape([ % Heat Capacity
     83.019 133.325 184.194 183.654 235.165 233.497
    234.568 234.638 233.558 200.815 286.182 285.056
@@ -84,11 +91,11 @@ for ii = 1:numData
 
   % WARNING: these xmeet1 values are hardcoded, computed separately
   xmeet1 = [
-    -2.5787628478868;   % for E
-    -1.6555622124036955 % for ΔH
+    -2.57876284788673; % for E
+    -1.65556221240371  % for ΔH
   ](ii); % of these 2, use only one per iteration
   ymeet1 = [
-    0.977567833002572; % for E
+    0.977567833002574; % for E
     0.994298524387525  % for ΔH
   ](ii);
   xmeet2 = 0;
@@ -135,7 +142,7 @@ for ii = 1:numData
     % Show in plot where the peak is, and draw indicator lines
     plot([peakAlpha peakAlpha], [0 peakCorrCoeff], '--k', 'LineWidth', lineWidth/2);
     plot([xstart peakAlpha], [peakCorrCoeff peakCorrCoeff], '--k', 'LineWidth', lineWidth/2);
-    text(peakAlpha, peakCorrCoeff,{'', sprintf("(−%.04f, %.04f)", abs(peakAlpha), peakCorrCoeff)}, 'VerticalAlignment', 'bottom');
+    text(peakAlpha, peakCorrCoeff,{'', sprintf("(−%s, %s)", as_4_dp_str(abs(peakAlpha)), as_4_dp_str(peakCorrCoeff))}, 'VerticalAlignment', 'bottom');
 
     yend = max(yend, y(end)); % y value to be used as y lower bound
   end
@@ -143,9 +150,9 @@ for ii = 1:numData
   % Continue drawing indicator for interval for which R_a is best (text)
   plot([xmeet1 xmeet2], [ymeet1 ymeet2], '*b',
        'MarkerSize', 16, 'LineWidth', lineWidth/1.5); % Mark with blue asterisks
-  text(xmeet1, ymeet1, {'', sprintf(" (−%.04f, %.04f)", abs(xmeet1), ymeet1)},
+  text(xmeet1, ymeet1, {'', sprintf(" (−%s, %s)", as_4_dp_str(abs(xmeet1)), as_4_dp_str(ymeet1))},
        'VerticalAlignment', 'top', 'Color', [0, 0, 0.8]);
-  text(xmeet2, ymeet2, {'', sprintf("(0, %.04f) ", ymeet2)},
+  text(xmeet2, ymeet2, {'', sprintf("(0, %s) ", as_4_dp_str(ymeet2))},
        'VerticalAlignment', 'top', 'HorizontalAlignment', 'right', 'Color', [0, 0, 0.8]);
 
   % Label this expData's zoomed-in plot

@@ -35,12 +35,12 @@ peakCorrCoeff = 0.995250875686022
 <table>
   <tr><th colspan=2>Combined correlation curves</th></tr>
   <tr>
-    <td><img src="imgs/01_comb_ccurves_DH_indices_FAR.png"></td>
-    <td><img src="imgs/01_comb_ccurves_E_indices_FAR.png"></td>
+    <td><img src="imgs/01_comb_ccurves_DH_indices_FAR_WIDE.png"></td>
+    <td><img src="imgs/01_comb_ccurves_E_indices_FAR_WIDE.png"></td>
   </tr>
   <tr>
-    <td><img src="imgs/01_comb_ccurves_DH_indices_NEAR.png"></td>
-    <td><img src="imgs/01_comb_ccurves_E_indices_NEAR.png"></td>
+    <td><img src="imgs/01_comb_ccurves_DH_indices_NEAR_WIDE.png"></td>
+    <td><img src="imgs/01_comb_ccurves_E_indices_NEAR_WIDE.png"></td>
   </tr>
 </table>
 <table>
