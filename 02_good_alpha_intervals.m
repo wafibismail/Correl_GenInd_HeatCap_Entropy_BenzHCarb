@@ -94,14 +94,14 @@ for ii = 1:numData
     this_fig = figure((ii-1)*numIndices+n);
     hold on;
 
-    % Get Interval limits
+    % Get Interval limits and print them to console
     peakAlpha = mean(
       GoldenSectionSearch_Maximum(ccFn, -4, 0, 1e-15));
     getGoodAlphaInInterval = @(lb, ub) mean(
       GoldenSectionSearch_Maximum(@(a)(-abs(ccFn(a)-a_goodrho(ii))), lb, ub, 1e-15));
     a_lb = getGoodAlphaInInterval(peakAlpha-3, peakAlpha);
     a_ub = getGoodAlphaInInterval(peakAlpha, peakAlpha+3);
-    disp(sprintf("ρ(%s,%s) >= %.02f when a = [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
+    disp(sprintf("ρ(%s,%s_α) >= %.02f when α = [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
 
     % Plot the actual curve, not including good alpha range
     % generate x values
