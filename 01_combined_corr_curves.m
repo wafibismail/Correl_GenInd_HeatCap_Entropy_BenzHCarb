@@ -51,9 +51,9 @@ d_f = [
 
 % Cell containing the three index computing functions
 getIndexFns = { % gets indices of all benzenoids, accepting variable alpha as argument
-  @(a) (d_f(:,1)*4^a + d_f(:,2)*6^a  + d_f(:,3)*9^a); % General Randic index
-  @(a) (d_f(:,1)*4^a + d_f(:,2)*5^a  + d_f(:,3)*6^a); % General SCI
-  @(a) (d_f(:,1)*8^a + d_f(:,2)*13^a + d_f(:,3)*18^a) % General Sombor index
+  @(a) (sum(d_f.*[4^a,6^a,9^a],2)); % General Randic index
+  @(a) (sum(d_f.*[4^a,5^a,6^a],2)); % General SCI
+  @(a) (sum(d_f.*[8^a,13^a,18^a],2)); % General Sombor index
 }';
 % Cell containing their respective labels
 indexName = {"R" "SCI" "SO"};
