@@ -101,7 +101,7 @@ for ii = 1:numData
       GoldenSectionSearch_Maximum(@(a)(-abs(ccFn(a)-a_goodrho(ii))), lb, ub, 1e-15));
     a_lb = getGoodAlphaInInterval(peakAlpha-3, peakAlpha);
     a_ub = getGoodAlphaInInterval(peakAlpha, peakAlpha+3);
-    disp(sprintf("ρ(%s,%s_α) >= %.02f when α = [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
+    disp(sprintf("ρ(%s,%s_α) >= %.02f when α ∈ [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
 
     % Plot the actual curve, not including good alpha range
     % generate x values
