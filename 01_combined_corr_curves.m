@@ -63,27 +63,12 @@ numData = size(expData, 2);       % two
 numIndices = size(getIndexFns,2); % three
 numCurves = numData*numIndices;   % six
 
+% All x in visible ranges (both plots - near and far)
+xnear = linspace(-1,0,800) .* [4.25; 3.25] + 0.25;
+xfar = linspace(-40,40,800);
+
 % Do the same procedure for each experimental data i.e., E and ΔH
 for ii = 1:numData
-
-  % Set visible ranges:
-
-  % Upper and lower bounds for alpha (zoomed-in plot)
-  xend = 0.25;
-  if ii==1 xstart = -4; % between indices and E
-  else xstart = -3; end % between indices and ΔH
-
-  % Zoomed-in plot - Generate x values
-  x = xstart:0.025:xend;
-  yend = 0; % - to be assigned the highest final rho value among all indices
-
-  % Upper and lower bounds for alpha (zoomed-out plot)
-  xend_far = 40;
-  xstart_far = -40;
-
-  % Zoomed-out plot - Generate xfar values
-  xfar = xstart_far:0.1:xend_far;
-
   % This figure is for the zoomed-in plot
   figure(numData+ii); hold on;
 
@@ -104,10 +89,9 @@ for ii = 1:numData
     0.974989505892947  % for ΔH
   ](ii);
 
-  plot([xmeet1 xmeet1], [0 1], '--b', 'LineWidth', lineWidth);
-  plot([0 xmeet1], [1 1], '--b', 'LineWidth', lineWidth);
-  plot([0 0], [0 1], '--b', 'LineWidth', lineWidth);
+  plot([xmeet1 xmeet1 0 0], [0 1 1 0], '--b', 'LineWidth', lineWidth);
 
+  yend = 0;
   % Draw correlation curves for each index-property pair
   for n = 1:numIndices
     ccFn = @(alpha) corrcoef( % Get: Corrcoef between benzenoid prop and index
@@ -116,15 +100,13 @@ for ii = 1:numData
     )(1,2);
 
     % generate their corresponding y values
-    y = arrayfun(ccFn, x);
-
-    % and their corresponding yfar values
+    ynear = arrayfun(ccFn, xnear(ii,:));
     yfar = arrayfun(ccFn, xfar);
 
     % Compute peak values and display in console
     disp(sprintf("%s against general_%s", expData{2,ii}, indexName{n}));
     peakAlpha = mean(
-      GoldenSectionSearch_Maximum(ccFn, xstart, xend, 1e-15))
+      GoldenSectionSearch_Maximum(ccFn, xnear(ii,1), xnear(ii,end), 1e-15))
     peakCorrCoeff = ccFn(peakAlpha)
 
     % Generate curve label
@@ -137,14 +119,13 @@ for ii = 1:numData
 
     figure(numData+ii); % Each expData's set of curves has a zoomed-in plot
     hold on;
-    curves(n) = plot(x, y, '-', 'LineWidth', lineWidth);
+    curves(n) = plot(xnear(ii,:), ynear, '-', 'LineWidth', lineWidth);
 
     % Show in plot where the peak is, and draw indicator lines
-    plot([peakAlpha peakAlpha], [0 peakCorrCoeff], '--k', 'LineWidth', lineWidth/2);
-    plot([xstart peakAlpha], [peakCorrCoeff peakCorrCoeff], '--k', 'LineWidth', lineWidth/2);
+    plot([peakAlpha peakAlpha xnear(ii,1)], [0 peakCorrCoeff peakCorrCoeff], '--k', 'LineWidth', lineWidth/2);
     text(peakAlpha, peakCorrCoeff,{'', sprintf("(−%s, %s)", as_4_dp_str(abs(peakAlpha)), as_4_dp_str(peakCorrCoeff))}, 'VerticalAlignment', 'bottom');
 
-    yend = max(yend, y(end)); % y value to be used as y lower bound
+    yend = max(yend, ynear(end)); % y value to be used as y lower bound
   end
 
   % Continue drawing indicator for interval for which R_a is best (text)
@@ -160,7 +141,7 @@ for ii = 1:numData
   ylabel('ρ');
   leg = legend(curves, curveLabels);
   set(leg, 'location', "southwest");
-  axis([xstart xend yend 1.001]);
+  axis([xnear(ii,1) xnear(ii,end) yend 1.001]);
   drawnow;
 
   % Label the zoomed-out plot
