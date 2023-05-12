@@ -18,14 +18,14 @@ saveToFile = false;
 % Note: Dimensions of resulting images are scaled according to each window size.
 %       To control the dimensions, after running the whole script, resize each
 %       ... figure window and then run only the saveas functions
-%       ... manually, by selection
+%       ... manually, by selection, at the end of this script
 
 % Utility: Below is a function to round-off to 4 decimal places | returns string
 %          Need to use this function as round(X,4,Type) does not exist in Octave
 %          ... and sprintf("%.04f",X) does not round properly for some numbers.
 as_4_dp_str = @(x) sprintf('%.04f', round(x*(10^4))/(10^4));
 
-% Cell containing Entropy and Heat Capacity of lower benzenoid
+% Cell containing Entropy and Heat Capacity of 30 lower benzenoids
 expData = {reshape([ % Entropy
     269.722 334.155 389.475 395.882 444.724 447.437
     457.958 455.839 450.418 399.491 499.831 513.857
@@ -49,8 +49,9 @@ d_f = [
   0 1 2 3  3 5  4 5 6 5  4  5  6  6  5 8  7  7  7  6  7  6 8 8  7  9 10  5 12 19
 ]';
 
-% Cell containing the three index computing functions
-getIndexFns = { % gets indices of all benzenoids, accepting variable alpha as argument
+% Cell containing the three index-computing functions
+% Usage: getIndexFns{n}(a) | n=1:R_a, n=2:SCI_a, n=3:SO_a, a = alpha
+getIndexFns = { % obtains a 30 by 1 matrix containing indices of the benzenoids
   @(a) (sum(d_f.*[4,6,9].^a,2)); % General Randic index
   @(a) (sum(d_f.*[4,5,6].^a,2)); % General SCI
   @(a) (sum(d_f.*[8,13,18].^a,2)); % General Sombor index
@@ -58,12 +59,13 @@ getIndexFns = { % gets indices of all benzenoids, accepting variable alpha as ar
 % Cell containing their respective labels
 indexName = {"R" "SCI" "SO"};
 
+% Variables for indexing arrays and iterating for-loops
 numData = size(expData, 2);       % two
 numIndices = size(getIndexFns,2); % three
 numCurves = numData*numIndices;   % six
 
-for edn = 1:numData
-  for fnn = 1:numIndices
+for edn = 1:numData % edn = experimental data number | 1=E, 2=ΔH
+  for fnn = 1:numIndices % fnn = function number | 1=R_a, 2=SCI_a, 3=SO_a
     ccFn = @(alpha) corrcoef( % Gets corrcoef between benzenoid prop and index
       getIndexFns{fnn}(alpha)(!isnan(expData{1,edn})),
       expData{1,edn}(!isnan(expData{1,edn}))
@@ -102,6 +104,7 @@ for edn = 1:numData
 end
 
 if saveToFile
+  % Also enforce more suitable axes for figures 2 and 5
   saveas(figure(1), "03_scatter_E_R.png");
   figure(2);
   axis([0.035 0.1125 250 600]);

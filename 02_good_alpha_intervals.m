@@ -1,10 +1,11 @@
-% In this script, six plots are generated which shows α intervals for good
-%  - correlation coefficient ρ between E and R_α
-%  - correlation coefficient ρ between E and SCI_α
-%  - correlation coefficient ρ between E and SO_α
-%  - correlation coefficient ρ between ΔH and R_α
-%  - correlation coefficient ρ between ΔH and SCI_α
-%  - correlation coefficient ρ between ΔH and SO_α
+% In this script, six plots are generated which shows α intervals for
+%  - good correlation coefficient ρ between E and R_α
+%  - good correlation coefficient ρ between E and SCI_α
+%  - good correlation coefficient ρ between E and SO_α
+%  - good correlation coefficient ρ between ΔH and R_α
+%  - good correlation coefficient ρ between ΔH and SCI_α
+%  - good correlation coefficient ρ between ΔH and SO_α
+% The limits of the intervals are also printed to console
 
 close all; % Close any figures already opened
 clear;     % and clear all variables
@@ -13,18 +14,18 @@ format long; % More significant figures printed in the console
 % Config: Adjust lines' width, font size, whether or not to save to file
 lineWidth = 3;
 fontSize = 24;
-saveToFile = false;
+saveToFile = false; % Set to true to auto-save plots
 % Note: Dimensions of resulting images are scaled according to each window size.
 %       To control the dimensions, after running the whole script, resize each
 %       ... figure window and then run only the saveas functions
-%       ... manually, by selection
+%       ... manually, by selection, at the end of this script
 
 % Utility: Below is a function to round-off to 4 decimal places | returns string
 %          Need to use this function as round(X,4,Type) does not exist in Octave
 %          ... and sprintf("%.04f",X) does not round properly for some numbers.
 as_4_dp_str = @(x) sprintf('%.04f', round(x*(10^4))/(10^4));
 
-% Cell containing Entropy and Heat Capacity of lower benzenoid
+% Cell containing Entropy and Heat Capacity of 30 lower benzenoids
 expData = {reshape([ % Entropy
     269.722 334.155 389.475 395.882 444.724 447.437
     457.958 455.839 450.418 399.491 499.831 513.857
@@ -48,8 +49,9 @@ d_f = [
   0 1 2 3  3 5  4 5 6 5  4  5  6  6  5 8  7  7  7  6  7  6 8 8  7  9 10  5 12 19
 ]'; % Used for computing indices based on edge endpoint degree partitions
 
-% Cell containing the three index computing functions
-getIndexFns = { % gets indices of all benzenoids, accepting variable alpha as argument
+% Cell containing the three index-computing functions
+% Usage: getIndexFns{n}(a) | n=1:R_a, n=2:SCI_a, n=3:SO_a, a = alpha
+getIndexFns = { % obtains a 30 by 1 matrix containing indices of the benzenoids
   @(a) (sum(d_f.*[4,6,9].^a,2)); % General Randic index
   @(a) (sum(d_f.*[4,5,6].^a,2)); % General SCI
   @(a) (sum(d_f.*[8,13,18].^a,2)); % General Sombor index
@@ -73,7 +75,8 @@ ystart = [0.99301 0.98901  0.983;  % E
 yend = [     0.95    0.96  0.975;  % E
              0.97   0.975   0.98]; % ΔH
 
-% Exast rho value considered good for E and ΔH
+% Exact rho value considered good for
+%            E     ΔH
 a_goodrho = [0.98; 0.99];
 
 % Colors (different shades of cyan and green)
@@ -86,54 +89,73 @@ colCurve = {[0, 0.75, 0.75]; [0, 0.5, 0]};
 for ii = 1:numData
   % Draw correlation curves for each index-property pair
   for n = 1:numIndices
+    % Function to get corrcoef ρ between E/ΔH (depending on ii) with specified α
+    %                                and R_a/SCI_a/SO_a (depending on n)
     ccFn = @(alpha) corrcoef(
       getIndexFns{n}(alpha)(!isnan(expData{1,ii})),
       expData{1,ii}(!isnan(expData{1,ii}))
     )(1,2);
 
-    this_fig = figure((ii-1)*numIndices+n);
+    this_fig = figure((ii-1)*numIndices+n); % Basically just figures (1) to (6)
     hold on;
 
     % Get Interval limits and print them to console
+
+    % Get alpha for highest rho first
     peakAlpha = mean(
       GoldenSectionSearch_Maximum(ccFn, -4, 0, 1e-15));
-    getGoodAlphaInInterval = @(lb, ub) mean(
-      GoldenSectionSearch_Maximum(@(a)(-abs(ccFn(a)-a_goodrho(ii))), lb, ub, 1e-15));
-    a_lb = getGoodAlphaInInterval(peakAlpha-3, peakAlpha);
-    a_ub = getGoodAlphaInInterval(peakAlpha, peakAlpha+3);
-    disp(sprintf("ρ(%s,%s_α) >= %.02f when α ∈ [%.08f, %.08f]", expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
 
-    % Plot the actual curve, not including good alpha range
+    % Prepare a funcion to calc |rho(a)-goodrho|
+    ccFn_good = @(a)(-abs(ccFn(a)-a_goodrho(ii)));
+
+    % and func to get the limit, i.e., value of alpha where rho is 0.98 or 0.99
+    getLimitFromInterval = @(lb, ub) mean(
+      GoldenSectionSearch_Maximum(ccFn_good, lb, ub, 1e-15));
+
+    a_lb = getLimitFromInterval(peakAlpha-3, peakAlpha); % Search to the left
+    a_ub = getLimitFromInterval(peakAlpha, peakAlpha+3); % Search to the right
+
+    % Write the intervals in console
+    disp(sprintf("ρ(%s,%s_α) ≥ %.02f when α ∈ [%.08f, %.08f]",
+         expData{2,ii}, indexName{n}, a_goodrho(ii), a_lb, a_ub));
+
+    % Plot the actual curve, but exclude good alpha range (<- separately drawn)
     % generate x values
-    x = [linspace(xstart(ii,n),a_lb,300) linspace(a_ub,xend(ii,n),300)];
-    % generate their corresponding y values
+    x = [linspace(xstart(ii,n),a_lb,300), linspace(a_ub,xend(ii,n),300)];
+    % generate the corresponding y values
     y = arrayfun(ccFn, x);
     plot(x, y, '-', 'LineWidth', lineWidth);
 
-    % Shade the area between indicator lines
-    x1 = linspace(a_lb,a_ub,400);
-    a_goodrho_curve = arrayfun(ccFn, x1);
-    iLine1 = zeros(1,size(x1,2)) + ystart(ii,n);
-    iLine2 = zeros(1,size(x1,2)) + yend(ii,n);
-    x2 = [x1, fliplr(x1)];
-    inBetween = [iLine1, fliplr(iLine2)];
-    fill(x2, inBetween, colShaded{ii}, 'LineStyle', 'none');
+    % Shade the area inside the good alpha interval
+    u0 = a_lb;         u_width = a_ub-a_lb;
+    v0 = ystart(ii,n); v_height = yend(ii,n) - ystart(ii,n);
+    rectangle('Position', [u0, v0, u_width, v_height], 'FaceColor', colShaded{ii}, 'LineStyle', 'none');
 
-    % Draw the indicator lines
-    plot([a_lb a_lb], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
-    plot([a_ub a_ub], [ystart(ii,n) yend(ii,n)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
-    plot([xstart(ii,n) a_lb], [a_goodrho(ii) a_goodrho(ii)], '--k', 'LineWidth', lineWidth/1.75);
-    plot([a_lb a_ub], [a_goodrho(ii) a_goodrho(ii)], '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorHorz{ii});
+    % Draw the indicator lines for the good alpha interval
+    % Vertical dashed lines:
+    plot([a_lb a_lb], [ystart(ii,n) yend(ii,n)],
+         '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
+    plot([a_ub a_ub], [ystart(ii,n) yend(ii,n)],
+         '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorVert{ii});
+    % Horizontal black dashed line, horizontal colored dashed line:
+    plot([xstart(ii,n) a_lb], [a_goodrho(ii) a_goodrho(ii)],
+         '--k', 'LineWidth', lineWidth/1.75);
+    plot([a_lb a_ub], [a_goodrho(ii) a_goodrho(ii)],
+         '--', 'LineWidth', lineWidth/1.75, 'Color', colIndicatorHorz{ii});
 
-    % Label the indicator lines
+    % Write on the plot the interval limits
     text(a_lb, yend(ii,n), {'', sprintf("  α=−%s", as_4_dp_str(abs(a_lb)))}, 'VerticalAlignment', 'top', 'Rotation', 90);
     text(a_ub, yend(ii,n), {'', sprintf("  α=−%s", as_4_dp_str(abs(a_ub)))}, 'VerticalAlignment', 'top', 'Rotation', 90);
 
-    % Plot the curve within the indicator lines with a different color
-    plot(x1, a_goodrho_curve, '-', 'LineWidth', lineWidth, 'Color', colCurve{ii});
-    plot(x1, iLine2, '-', 'LineWidth', lineWidth, 'Color', colCurve{ii});
+    % Finally, plot the colored curve within the good alpha range
+    x_in = linspace(a_lb,a_ub,400);
+    y_in = arrayfun(ccFn, x_in);
+    plot(x_in, y_in, '-', 'LineWidth', lineWidth, 'Color', colCurve{ii});
+    % Also highlight the good interval on the x-axis
+    plot([a_lb, a_ub], [yend(ii,n), yend(ii,n)], '-',
+         'LineWidth', lineWidth, 'Color', colCurve{ii});
 
-    % Label the plot
+    % Label the plot                     [E,ΔH]         [R,SCI,SO]
     title(sprintf('between %s and %s_a', expData{2,ii}, indexName{n}));
     xlabel('α');
     ylabel('ρ');
