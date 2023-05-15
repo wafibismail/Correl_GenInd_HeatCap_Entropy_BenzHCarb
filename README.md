@@ -13,14 +13,14 @@
 
 ```
 E against general_R
-peakAlpha = -1.948205235815929
-peakCorrCoeff = 0.989278272323736
+peakAlpha = -1.948234552970996
+peakCorrCoeff = 0.989277271666840
 E against general_SCI
-peakAlpha = -3.662418922308818
-peakCorrCoeff = 0.985744623747090
+peakAlpha = -3.662470590108091
+peakCorrCoeff = 0.985743222886147
 E against general_SO
-peakAlpha = -1.728514071867182
-peakCorrCoeff = 0.982031572039760
+peakAlpha = -1.728537234308307
+peakCorrCoeff = 0.982029806987993
 ΔH against general_R
 peakAlpha = -1.238343021990512
 peakCorrCoeff = 0.998062916158750
